@@ -26,7 +26,7 @@ qos_profiles_dict = {'Sensor':rclpy.qos.qos_profile_sensor_data,'R1':qos_profile
 class HandLandmarkDetectionNode(Node):
     def __init__(self):
         super().__init__('hand_detection_node')
-        self.publisher_ = self.create_publisher(Image, 'camera/image_hand_landmarks', 10)
+        self.publisher_ = self.create_publisher(Image, 'camera/image_hand_landmarks', qos_profile=qos_profiles_dict[self.qos_profile])
 
         self.cv_bridge = CvBridge()
         self.cameraMatrix = 1000*np.array([[1.6695,0.0,0.9207],[0.0,1.6718,0.5518],[0,0,0.0010]]) #Logitech Desktop webcam
