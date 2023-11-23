@@ -1,7 +1,7 @@
 import sys
 import rclpy
 from rclpy.node import Node
-from sensor_msgs.msg import Image
+from sensor_msgs.msg import Image, CompressedImage
 from cv_bridge import CvBridge
 import cv2
 import numpy as np
@@ -13,7 +13,6 @@ from geometry_msgs.msg import Pose
 from experiment_pkg import qos_profiles
 
 from pympler.asizeof import asizeof
-from sensor_msgs.msg import CompressedImage
 
 import mediapipe as mp
 mp_drawing = mp.solutions.drawing_utils
@@ -26,7 +25,7 @@ qos_profiles_dict = {'Sensor':rclpy.qos.qos_profile_sensor_data,'R1':qos_profile
 class HandLandmarkDetectionNode(Node):
     def __init__(self):
         super().__init__('hand_detection_node')
-        self.publisher_ = self.create_publisher(Image, 'camera/image_hand_landmarks', qos_profile=qos_profiles_dict[self.qos_profile])
+
 
         self.cv_bridge = CvBridge()
         self.cameraMatrix = 1000*np.array([[1.6695,0.0,0.9207],[0.0,1.6718,0.5518],[0,0,0.0010]]) #Logitech Desktop webcam
@@ -77,7 +76,7 @@ class HandLandmarkDetectionNode(Node):
                 qos_profiles_dict[self.qos_profile]#,event_callbacks=self.subscription_callbacks
             )
         self.pose_publisher_ = self.create_publisher(PoseCommunication, 'hand_detection/landmark_poses', qos_profile=qos_profiles_dict[self.qos_profile])
-
+        self.publisher_ = self.create_publisher(CompressedImage, 'camera/image_hand_landmarks', qos_profile=qos_profiles_dict[self.qos_profile])
 
     def image_callback(self, msg):
         #start_time = time.time()
@@ -157,7 +156,7 @@ class HandLandmarkDetectionNode(Node):
         #self.get_logger().info(f'Tag position: {self.tag_position_camera}, tag orientation: {self.euler_angles}')
         #self.get_logger().info('ArUco tag computation time: {:.2f} ms'.format(computation_time * 1000))
         #self.get_logger().info(f'Counter id: {counter_id}, latency: {latency}')
-        self.publisher_.publish(self.cv_bridge.cv2_to_imgmsg(cv_image))
+        self.publisher_.publish(self.cv_bridge.cv2_to_compressed_imgmsg(cv_image))
         self.counter = self.counter + 1
 
 
