@@ -79,7 +79,7 @@ class ArUcoTagDetectionNode(Node):
                 qos_profiles_dict[self.qos_profile]#,event_callbacks=self.subscription_callbacks
             )
         self.pose_publisher_ = self.create_publisher(PoseCommunication, 'aruco_detection/tag_poses', qos_profile=qos_profiles_dict[self.qos_profile])
-        self.publisher_ = self.create_publisher(CompressedImage, 'camera/image_arucos', qos_profile=qos_profiles_dict[self.qos_profile])
+        self.publisher_ = self.create_publisher(Image, 'camera/image_arucos', 10)
 
 
         #found_aruco = False
@@ -202,7 +202,7 @@ class ArUcoTagDetectionNode(Node):
         #self.get_logger().info(f'Tag position: {self.tag_position_camera}, tag orientation: {self.euler_angles}')
         #self.get_logger().info('ArUco tag computation time: {:.2f} ms'.format(computation_time * 1000))
         #self.get_logger().info(f'Counter id: {counter_id}, latency: {latency}')
-        self.publisher_.publish(self.cv_bridge.cv2_to_compressed_imgmsg(cv_image))
+        self.publisher_.publish(self.cv_bridge.cv2_to_imgmsg(cv_image))
         self.counter = self.counter + 1
 
 
