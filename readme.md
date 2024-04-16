@@ -29,4 +29,5 @@ optional:
 - ros2 service call /real_pose_real_push/stop std_srvs/srv/Empty
 
 ## Distributed control via two networks
+enter the IP addresses for peer discovery in the fastdds_pro.xml and export it as *export FASTRTPS_DEFAULT_PROFILES_FILE=path_to_file_folder/fastdds_pro.xml* for the three bridging nodes, e.g. image publisher (onboard), image processer (edge), high-level controller (onboard)
 
